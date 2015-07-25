@@ -2,17 +2,15 @@
 
 In this chapter you'll learn how Django connects to the database and stores data in it. Let's dive in!
 
-
 ## What is a QuerySet?
 
 A QuerySet is, in essence, a list of objects of a given Model. QuerySet allows you to read the data from database, filter it and order it.
 
 It's easiest to learn by example. Let's try this, shall we?
 
-
 ## Django shell
 
-Open up your local console (not on PythonAnywhere) and type this command:
+Open up your console and type this command:
 
     (myvenv) ~/djangogirls$ python manage.py shell
 
@@ -22,7 +20,6 @@ The effect should be like this:
     >>>
 
 You're now in Django's interactive console. It's just like Python prompt but with some additional Django magic :). You can use all the Python commands here too, of course.
-
 
 ### All objects
 
@@ -43,7 +40,6 @@ This is simple: we import model `Post` from `blog.models`. Let's try displaying 
     [<Post: my post title>, <Post: another post title>]
 
 It's a list of the posts we created earlier! We created these posts using the Django admin interface. However, now we want to create new posts using python, so how do we do that?
-
 
 ### Create object
 
@@ -68,22 +64,18 @@ It's the superuser we created earlier! Let's get an instance of the user now:
 
 As you can see, we now `get` a `User` with a `username` that equals to 'ola'. Neat! Of course, you have to adjust it to your username.
 
-Now we can finally create our post:
+Now we can finally create our first post:
 
-    >>> Post.objects.create(author=me, title='Sample title', text='Test')
+    >>> Post.objects.create(author = me, title = 'Sample title', text = 'Test')
 
 Hurray! Wanna check if it worked?
 
     >>> Post.objects.all()
-    [<Post: my post title>, <Post: another post title>, <Post: Sample title>]
-
-There it is, one more post in the list!
-
+    [<Post: Sample title>]
 
 ### Add more posts
 
 You can now have a little fun and add more posts to see how it works. Add 2-3 more and go ahead to the next part.
-
 
 ### Filter objects
 
@@ -104,19 +96,18 @@ You can also get a list of all published posts. We do it by filtering all the po
     >>> Post.objects.filter(published_date__lte=timezone.now())
     []
 
-Unfortunately, the post we added from the Python console is not published yet. We can change that! First get an instance of a post we want to publish:
+Unfortunately, none of our posts are published yet. We can change that! First get an instance of a post we want to publish:
 
-    >>> post = Post.objects.get(title="Sample title")
+    >>> post = Post.objects.get(id=1)
 
 And then publish it with our `publish` method!
 
     >>> post.publish()
 
-Now try to get list of published posts again (press the up arrow button 3 times and hit `enter`):
+Now try to get list of published posts again (press the up arrow button 3 times and hit Enter):
 
     >>> Post.objects.filter(published_date__lte=timezone.now())
     [<Post: Sample title>]
-
 
 ### Ordering objects
 
@@ -129,6 +120,15 @@ We can also reverse the ordering by adding `-` at the beginning:
 
     >>> Post.objects.order_by('-created_date')
     [<Post: 4th title of post>,  <Post: My 3rd post!>, <Post: Post number 2>, <Post: Sample title>]
+
+
+### Chaining querysets
+
+You can also combine QuerySets by **chaining** them together:
+
+    >>> Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+
+This is really powerful and lets you write quite complex queries.
 
 Cool! You're now ready for the next part! To close the shell, type this:
 
